@@ -238,6 +238,10 @@ var globes = function() {
     }
 
     function orthographic() {
+
+
+        
+
         return newGlobe({
             newProjection: function() {
                 return d3.geo.orthographic().rotate(currentPosition()).precision(0.1).clipAngle(90);
@@ -279,6 +283,8 @@ var globes = function() {
                 return [-coord[0], -coord[1], this.projection.rotate()[2]];
             }
         });
+      
+
     }
 
     function stereographic(view) {

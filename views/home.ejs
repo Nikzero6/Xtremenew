@@ -3,14 +3,13 @@
   <head>
     <meta charset="utf-8">
     <title>Globe</title>
-    
 	<link rel="stylesheet" type="text/css" href="./stylesheets/styles.css">
-	
-
   </head>
-
+  
 <body>
-
+    
+        
+        
 
     <div id="display">
 		<svg id="map" class="fill-screen" xmlns="http://www.w3.org/2000/svg" version="1.1"></svg>
@@ -49,6 +48,9 @@
             <p>Data | <span id="data-layer"></span></p>
             <p><span id="scale-label">Scale | </span><canvas id="scale"></canvas></p>
             <p>Source | <span id="data-center"></span></p>
+            <p>Mode |<span
+                class="text-button" id="ocean-mode-enable">Ocean</span>
+            </p>
             <p class="wind-mode">Animate |<span
                 class="text-button" id="animate-currents-back" title="Current">Current</span> - <span
                 class="text-button" id="animate-winds-back" title="Wind">Wind</span>-<span
@@ -56,7 +58,9 @@
 
                </p>
             
-          
+               <p class="wind-mode">Overlay | <span
+                class="text-button" id="overlay-off">None</span> 
+            </p>
             <p class="ocean-mode invisible">Animate | <span
                 class="text-button" id="animate-currents" title="Current">Current</span> - <span
                 class="text-button" id="animate-winds" title="Wind">Wind</span> - <span
@@ -69,6 +73,8 @@
             </p>
            
             <p>Projection |
+                <span
+                class="proj text-button" id="equirectangular" title="Equirectangular">E</span> – 
                <span
                 class="proj text-button" id="orthographic" title="Orthographic">O</span>
              
@@ -84,7 +90,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.3.10/d3.min.js" charset="utf-8"></script>
 
 
-    <script src="./Js/d3.geo.projection.v0.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-geo-projection/0.2.10/d3.geo.projection.js" charset="utf-8"></script>
     <script src="./Js/d3.geo.polyhedron.v0.min.js" charset="utf-8"></script>
     <script src="./Js/when.js" charset="utf-8"></script>
 
@@ -92,89 +98,24 @@
     <script src="./Js/globes.js" charset="utf-8"></script>
     <script src="./Js/products.js" charset="utf-8"></script>
     <script src="./Js/earth.js" charset="utf-8"></script>
-
-<script type="text/javascript" >
-	/*
-// width and height
-var w = window.innerWidth;
-var h = window.innerHeight;
-
-// scale globe to size of window
-var scl = Math.min(w, h)/2.5; 
-
-// map projection
-var projection = d3.geoMercator()
-		.scale(scl)
-		.translate([ w/2, h/2 ]);
-            
-// path generator
-var path = d3.geoPath()
-  .projection(projection);
-
-// append svg
-var svg = d3.select("#map")
-  .attr("width", w)
-  .attr("height", h);
-
-// append g element for map
-var map = svg.append("g");
-
-// enable drag
-var drag = d3.drag()
-	.on("start", dragstarted)
-	.on("drag", dragged);
-
-var gpos0, o0, gpos1, o1;
-svg.call(drag);
-
-// enable zoom
-var zoom = d3.zoom()
-	.scaleExtent([0.75, 50]) //bound zoom
-	.on("zoom", zoomed);
-
-svg.call(zoom);
-
-// load topojson
-d3.json("https://gist.githubusercontent.com/sarah37/dcca42b936545d9ee9f0bc8052e03dbd/raw/550cfee8177df10e515d82f7eb80bce4f72c52de/world-110m.json", function(json) {
-	map.append("path")
-	.datum({type: "Sphere"})
-	.attr("class", "ocean")
-	.attr("d", path);
-
-	map.append("path")
-	.datum(topojson.merge(json, json.objects.countries.geometries))
-	.attr("class", "land")
-	.attr("d", path);
-
-	map.append("path")
-	.datum(topojson.mesh(json, json.objects.countries, function(a, b) { return a !== b; }))
-	.attr("class", "boundary")
-	.attr("d", path);
+    <script >
+ var svg = d3.select("svg");
+svg.on("click", function () {
+    var mouse = d3.mouse(this);
+    console.log("clicked");
+    svg
+        .append("use")
+        .attr("href", "#pointer")
+        .attr("x", mouse[0])
+        .attr("y", mouse[1])
+        .attr("fill", "#039BE5")
+        .attr("stroke", "#039BE5")
+        .attr("stroke-width", "1px");
 });
 
+    </script>
 
-// functions for dragging
-function dragstarted() {
-	gpos0 = projection.invert(d3.mouse(this));
-	o0 = projection.rotate();
-}
 
-function dragged() {
-	gpos1 = projection.invert(d3.mouse(this));
-	o0 = projection.rotate();
-	o1 = eulerAngles(gpos0, gpos1, o0);
-	projection.rotate(o1);
-
-	map.selectAll("path").attr("d", path);
-}
-
-// functions for zooming
-function zoomed() {
-	projection.scale(d3.event.transform.translate(projection).k * scl)
-	map.selectAll("path").attr("d", path);
-}
-*/
-</script>
 
 </body>
 </html>

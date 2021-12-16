@@ -8,6 +8,8 @@
  */
 (function() {
     "use strict";
+   
+    var breakpoints = 0;
 
     var SECOND = 1000;
     var MINUTE = 60 * SECOND;
@@ -65,6 +67,9 @@
             }
         };
     }();
+
+
+    
 
     function newAgent() {
         return µ.newAgent().on({"reject": report.error, "fail": report.error});
@@ -301,24 +306,59 @@
         var lakes = d3.select(".lakes");
         d3.selectAll("path").attr("d", path);  // do an initial draw -- fixes issue with safari
 
+        
+
+        
+        var pointsArr;
+        let arr=[];
         function drawLocationMark(point, coord) {
+
+            var width = view.width, height = view.height;
+            
             // show the location on the map if defined
-            if (fieldAgent.value() && !fieldAgent.value().isInsideBoundary(point[0], point[1])) {
+            if (
+                fieldAgent.value() &&
+                !fieldAgent.value().isInsideBoundary(point[0], point[1])
+              ) {      
                 // UNDONE: Sometimes this is invoked on an old, released field, because new one has not been
                 //         built yet, causing the mark to not get drawn.
-                return;  // outside the field boundary, so ignore.
-            }
-            if (coord && _.isFinite(coord[0]) && _.isFinite(coord[1])) {
-                var mark = d3.select(".location-mark");
-                if (!mark.node()) {
-                    mark = d3.select("#foreground").append("path").attr("class", "location-mark");
-                }
-                mark.datum({type: "Point", coordinates: coord}).attr("d", path);
-            }
+                return; // outside the field boundary, so ignore.
+              }
+              if (coord && _.isFinite(coord[0]) && _.isFinite(coord[1])) {
+              
+
+        
+                arr = [...arr, coord];
+                
+                let mark = d3
+                  .select("#foreground").append("g").attr("id",`div-mark-${arr.length}`)
+                  .append("path")
+                  .attr("class", `location-mark location-mark-${arr.length}`)
+                  .datum({ type: "Point", coordinates: coord })
+                  .attr("d", path).attr("fill","black");
+  
+                  d3.select(`#div-mark-${arr.length}`).append("text").node().value="1";
+  
+                  if(arr.length >1){
+                     
+                      d3.select("#foreground")
+                      .append('path').attr("id","line-"+(arr.length-1))
+                      .attr('d', d3.svg.line()([[point[0], point[1]], [pointsArr[0], pointsArr[1]]]))
+                      .attr('stroke', 'red');
+  
+                      
+                     
+                  }
+  
+                  pointsArr=point;
+                return mark;
+                 
+              }
         }
 
         // Draw the location mark if one is currently visible.
         if (activeLocation.point && activeLocation.coord) {
+            
             drawLocationMark(activeLocation.point, activeLocation.coord);
         }
 
@@ -339,6 +379,7 @@
                     coastline.datum(mesh.coastLo);
                     lakes.datum(mesh.lakesLo);
                     rendererAgent.trigger("start");
+                  
                 },
                 move: function() {
                     doDraw_throttled();
@@ -347,7 +388,12 @@
                     coastline.datum(mesh.coastHi);
                     lakes.datum(mesh.lakesHi);
                     d3.selectAll("path").attr("d", path);
+                    
                     rendererAgent.trigger("render");
+                    
+                
+
+
                 },
                 click: drawLocationMark
             });
@@ -361,7 +407,8 @@
         log.timeEnd("rendering map");
         return "ready";
     }
-
+    
+    
     function createMask(globe) {
         if (!globe) return null;
 
@@ -824,6 +871,10 @@
     function updateLocationDetails() {
         showLocationDetails(activeLocation.point, activeLocation.coord);
     }
+   
+   
+
+
 
     function clearLocationDetails(clearEverything) {
         d3.select("#location-coord").text("");
@@ -858,6 +909,7 @@
             if (d3.select(elementId).classed("disabled")) return;
             configuration.save(newAttr);
         });
+        
         configuration.on("change", function(model) {
             var attr = model.attributes;
             d3.select(elementId).classed("highlighted", _.isEqual(_.pick(attr, keys), _.pick(newAttr, keys)));
@@ -885,6 +937,10 @@
             
             d3.select("#sponsor").classed("invisible", true);
         });
+
+
+        
+        
 
         d3.selectAll(".fill-screen").attr("width", view.width).attr("height", view.height);
         // Adjust size of the scale canvas to fill the width of the menu to the right of the label.
@@ -1040,6 +1096,9 @@
             d3.select("#wind-mode-enable").classed("highlighted", param === "wind");
         });
         d3.select("#ocean-mode-enable").on("click", function() {
+
+
+
             if (configuration.get("param") !== "ocean") {
                 // When switching between modes, there may be no associated data for the current date. So we need
                 // find the closest available according to the catalog. This is not necessary if date is "current".

@@ -16,9 +16,7 @@ var products = function() {
         // most recent. For example: [ 20140101-abc.json, 20140106-abc.json, 20140112-abc.json, ... ]
         oscar: µ.loadJson([OSCAR_PATH, "catalog.json"].join("/"))
     };
-   var catalogs2={
-    oscar: µ.loadJson([OSCAR_PATH, "catalognew.json"].join("/"))
-   }
+   
     function buildProduct(overrides) {
         return _.extend({
             description: "",
@@ -129,21 +127,10 @@ var products = function() {
                     date: gfsDate(attr),
                     builder: function(file) {
                         var uData = file[0].data, vData = file[1].data;
-
-                        console.log("udata",uData);
-                        console.log("vdata",vData);
-                        
                         return {
-
-                       
-
                             header: file[0].header,
                             interpolate: bilinearInterpolateVector,
-
-                           
-                            data: function(i) {
-
-                               
+                            data: function(i) {  
                                 return [uData[i], vData[i]];
                             }
                         }
@@ -167,56 +154,48 @@ var products = function() {
         "waves": {
             matches: _.matches({param: "waves", surface: "surface", level: "level"}),
             create: function(attr) {
-                return when(catalogs2.oscar).then(function(catalognew) {
-                    return buildProduct({
-                        field: "vector",
-                        type: "waves",
-                        description: localize({
-                            name: {en: "Ocean Waves", ja: "海流"},
-                            qualifier: {en: " @ Surface", ja: " @ 地上"}
-                        }),
+                return buildProduct({
+                    field: "vector",
+                    type: "waves",
+                    description: localize({
+                        name: {en: "Wave", ja: "風速"},
+                        qualifier: {en: " @ " + describeSurface(attr), ja: " @ " + describeSurfaceJa(attr)}
+                    }),
+                  
+                    paths: ["./data/weather/wave/current-wave-surface-level-gfs-1.0.json"],
+                    date: gfsDate(attr),
+                    builder: function(file) {
+                        var uData = file[0].data, vData = file[1].data;
                        
-                        paths: [oscar0p33Path(catalognew, attr)],
-                        date: oscarDate(catalognew, attr),
-                        navigate: function(step) {
-                            return oscarStep(catalognew, this.date, step);
-                        },
-                        builder: function(file) {
-                            var uData = file[0].data, vData = file[1].data;
+                        return {
 
-                            console.log("udata",uData);
-                            console.log("vdata",vData);
-                            return {
-                                header: file[0].header,
-                                interpolate: bilinearInterpolateVector,
-                                
-                                data: function(i) {
-                                    var u = uData[i], v = vData[i];
-                                    return µ.isValue(u) && µ.isValue(v) ? [u, v] : null;
-                                }
+                            header: file[0].header,
+                            interpolate: bilinearInterpolateVector,
+                            data: function(i) {
+                                return [uData[i], vData[i]];
                             }
-                        },
-                        units: [
-                            {label: "m/s",  conversion: function(x) { return x; },            precision: 2},
-                            {label: "km/h", conversion: function(x) { return x * 3.6; },      precision: 1},
-                            {label: "kn",   conversion: function(x) { return x * 1.943844; }, precision: 1},
-                            {label: "mph",  conversion: function(x) { return x * 2.236936; }, precision: 1}
-                        ],
-                        scale: {
-                            bounds: [0, 1.5],
-                            gradient: µ.segmentedColorScale([
-                                [0, [10, 25, 68]],
-                                [0.15, [10, 25, 250]],
-                                [0.4, [24, 255, 93]],
-                                [0.65, [255, 233, 102]],
-                                [1.0, [255, 233, 15]],
-                                [1.5, [255, 15, 15]]
-                            ])
-                        },
-                        particles: {velocityScale: 1/4400, maxIntensity: 0.7}
-                    });
+                        }
+                    },
+                    units: [
+                        {label: "km/h", conversion: function(x) { return x * 3.6; },      precision: 0},
+                        {label: "m/s",  conversion: function(x) { return x; },            precision: 1},
+                        {label: "kn",   conversion: function(x) { return x * 1.943844; }, precision: 0},
+                        {label: "mph",  conversion: function(x) { return x * 2.236936; }, precision: 0}
+                    ],
+                    scale: {
+                        bounds: [0, 100],
+                        gradient: function(v, a) {
+                            return µ.extendedSinebowColor(Math.min(v, 100) / 100, a);
+                        }
+                    },
+                    particles: {velocityScale: 1/60000, maxIntensity: 17}
                 });
-            }},
+            }
+
+
+
+
+            },
 
 /* 
         "temp": {

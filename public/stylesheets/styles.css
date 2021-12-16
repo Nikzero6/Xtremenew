@@ -2,7 +2,7 @@
  * At-Rules
  **************************************************************************************************/
 
-@font-face {
+ @font-face {
     font-family: mplus-2p-light-sub;
     src: url("/styles/mplus-2p-light-sub.ttf?v6");
 }
@@ -63,7 +63,7 @@ svg {
 
 body {
     color: #eeeeee;
-    background: #000005;
+    background: #f5f5f7;
 }
 
 #warn {
@@ -231,7 +231,7 @@ body {
 }
 
 .foreground-sphere {
-    stroke: #fbfbff;
+    stroke: #000005;
     stroke-width: 4.0;
     fill: none;
     -moz-user-select: none;  /* Oddly, Win FF sometimes selects this SVG element. Disable. */
@@ -239,8 +239,9 @@ body {
 }
 
 .location-mark {
-    stroke: #110041;
+    stroke: #3856aa;
     stroke-width: 2.5;
     fill: none;
+    
 }
 
