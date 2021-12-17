@@ -123,23 +123,31 @@ var globes = function() {
              * @param startScale starting scale.
              */
             manipulator: function(startMouse, startScale) {
+     
+
                 var projection = this.projection;
                 var sensitivity = 60 / startScale;  // seems to provide a good drag scaling factor
                 var rotation = [projection.rotate()[0] / sensitivity, -projection.rotate()[1] / sensitivity];
                 var original = projection.precision();
+
+                
                 projection.precision(original * 10);
                 return {
                     move: function(mouse, scale) {
                         if (mouse) {
                             var xd = mouse[0] - startMouse[0] + rotation[0];
                             var yd = mouse[1] - startMouse[1] + rotation[1];
+
+                            
                             projection.rotate([xd * sensitivity, -yd * sensitivity, projection.rotate()[2]]);
                         }
-                        projection.scale(scale);
+                          projection.scale(scale);
                     },
                     end: function() {
                         projection.precision(original);
-                    }
+                    },
+                    proj:this
+                    
                 };
             },
 

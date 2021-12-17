@@ -131,6 +131,8 @@
             })
             .on("zoom", function() {
                 var currentMouse = d3.mouse(this), currentScale = d3.event.scale;
+
+               
                 op = op || newOp(currentMouse, 1);  // Fix bug on some browsers where zoomstart fires out of order.
                 if (op.type === "click" || op.type === "spurious") {
                     var distanceMoved = µ.distance(currentMouse, op.startMouse);
@@ -152,6 +154,7 @@
             })
             .on("zoomend", function() {
                 op.manipulator.end();
+
                 if (op.type === "click") {
                     dispatch.trigger("click", op.startMouse, globe.projection.invert(op.startMouse) || []);
                 }
@@ -313,7 +316,7 @@
         let arr=[];
         function drawLocationMark(point, coord) {
 
-            var width = view.width, height = view.height;
+          
             
             // show the location on the map if defined
             if (
@@ -327,30 +330,36 @@
               if (coord && _.isFinite(coord[0]) && _.isFinite(coord[1])) {
               
 
-        
+               console.log(path);
                 arr = [...arr, coord];
-                
+
                 let mark = d3
                   .select("#foreground").append("g").attr("id",`div-mark-${arr.length}`)
                   .append("path")
                   .attr("class", `location-mark location-mark-${arr.length}`)
                   .datum({ type: "Point", coordinates: coord })
-                  .attr("d", path).attr("fill","black");
+                  .attr("d", path).attr("fill","none")
+               
+         
   
                   d3.select(`#div-mark-${arr.length}`).append("text").node().value="1";
-  
+                
                   if(arr.length >1){
                      
-                      d3.select("#foreground")
-                      .append('path').attr("id","line-"+(arr.length-1))
-                      .attr('d', d3.svg.line()([[point[0], point[1]], [pointsArr[0], pointsArr[1]]]))
-                      .attr('stroke', 'red');
-  
+                    d3.select("#foreground")
+                    .append("g")
+                    .attr("id","line-"+(arr.length-1))
+                    .append('path')
+                    .attr("class", `location-line location-line-${arr.length}`)
+                    .datum({type:"Line",data:[[point[0], point[1]], [pointsArr[0], pointsArr[1]]]})
+                    .attr('d', d3.svg.line()([[point[0], point[1]], [pointsArr[0], pointsArr[1]]]))
+                    .attr("value",d3.svg.line()([[point[0], point[1]], [pointsArr[0], pointsArr[1]]]))
+                    .attr('stroke', 'red');
                       
                      
                   }
   
-                  pointsArr=point;
+                pointsArr=point;
                 return mark;
                  
               }
@@ -387,11 +396,27 @@
                 moveEnd: function() {
                     coastline.datum(mesh.coastHi);
                     lakes.datum(mesh.lakesHi);
-                    d3.selectAll("path").attr("d", path);
-                    
-                    rendererAgent.trigger("render");
-                    
+                  
+
+
+                    if(arr.length==0)
+                    {
+                        d3.selectAll("path").attr("d", path);
+                    }
+                    else{
+                        let linArr = d3.selectAll(".location-line") 
+                        console.log(linArr, "====")
+                       
+                        linArr[0].map(el=>{
+                            d3.select(`.${el.attributes.class.value.split(" ")[1]}`).attr("d",el.attributes.value.value)
+                            return el
+                        }
+                        )
+                        
+                    }
+                   
                 
+                    rendererAgent.trigger("render");
 
 
                 },
@@ -1032,6 +1057,8 @@
         function startInterpolation() {
             fieldAgent.submit(interpolateField, globeAgent.value(), gridAgent.value());
         }
+
+        
         function cancelInterpolation() {
             fieldAgent.cancel();
         }
