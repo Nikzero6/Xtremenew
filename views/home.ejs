@@ -82,6 +82,15 @@
            
     
         </div>
+
+        <div>
+            <table id="coordinates-table">
+                <tr>
+                  <th></th>
+                  <th>Coordinates</th>
+                </tr>
+              </table>
+            </div>
     </div>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js" charset="utf-8"></script>
@@ -99,20 +108,7 @@
     <script src="./Js/products.js" charset="utf-8"></script>
     <script src="./Js/earth.js" charset="utf-8"></script>
     <script >
- var svg = d3.select("svg");
-svg.on("click", function () {
-    var mouse = d3.mouse(this);
-    console.log("clicked");
-    svg
-        .append("use")
-        .attr("href", "#pointer")
-        .attr("x", mouse[0])
-        .attr("y", mouse[1])
-        .attr("fill", "#039BE5")
-        .attr("stroke", "#039BE5")
-        .attr("stroke-width", "1px");
-});
-
+ 
     </script>
 
 
