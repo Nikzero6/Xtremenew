@@ -240,11 +240,12 @@ var globes = function() {
     function equirectangular() {
         return newGlobe({
             newProjection: function() {
-                return d3.geo.equirectangular().rotate(currentPosition()).precision(0.1);
+                return d3.geo.mercator().rotate(currentPosition()).precision(0.1);
             }
         });
     }
 
+    
     function orthographic() {
 
 
@@ -360,7 +361,8 @@ var globes = function() {
         orthographic: orthographic,
         stereographic: stereographic,
         waterman: waterman,
-        winkel3: winkel3
+        winkel3: winkel3,
+    
     });
 
 }();

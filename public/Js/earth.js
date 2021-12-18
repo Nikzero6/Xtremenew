@@ -1,3 +1,4 @@
+
 /**
  * earth - a project to visualize global air data.
  *
@@ -354,6 +355,7 @@
   
       var pointsArr;
       let arr = [];
+      let coorarr=[];
       var marked=false;
       var clicked;
       function drawLocationMark(point, coord) {
@@ -369,15 +371,17 @@
         if (coord && _.isFinite(coord[0]) && _.isFinite(coord[1])) {
           
           arr = [...arr, coord];
+          coorarr=[...coorarr,point];
   
           let oldpoints = d3.selectAll(".location-mark");
-         
+         console.log(oldpoints[0]);
      
           for (let i = 0; i < oldpoints[0].length; i++) {
+            oldpoints = d3.selectAll(".location-mark");
+
+            let x = oldpoints[0][i].getBoundingClientRect().left +7;
+            let y = oldpoints[0][i].getBoundingClientRect().top +7;
            
-            let x = oldpoints[0][i].getBoundingClientRect().left + 7;
-            let y = oldpoints[0][i].getBoundingClientRect().top + 7;
-             
             
             if (Math.abs(x - point[0]) <= 7 && Math.abs(y - point[1]) <= 7  && marked==false) {
               marked=true;
@@ -388,23 +392,103 @@
             }
             else if(marked==true  && Math.abs(x - point[0]) > 7 && Math.abs(y - point[1]) > 7)
             {
-                console.log("second time clicked");
-                console.log(clicked);
+             
+            
                 d3.select(`#div-mark-${clicked}`).remove();
+                d3.select("#line-" + (clicked)).remove();
+                d3.select("#line-" + (clicked-1)).remove();
 
-            d3
+
+
+
+
+                d3
             .select("#foreground")
             .append("g")
-            .attr("id", `div-mark-${clicked}`)
+            .attr("id",`div-mark-${clicked}`)
             .append("path")
             .attr("class", `location-mark location-mark-${clicked}`)
             .datum({ type: "Point", coordinates: coord })
             .attr("d", path)
             .attr("fill", "none");
+
+            
+
+            if(clicked!=1)
+            {
+              d3.select("#foreground")
+              .append("g")
+              .attr("id", "line-" + (clicked- 1))
+              .append("path")
+              .attr("class", `location-line location-line-${clicked-1}`)
+              .datum({
+                type: "Line",
+                data: [
+                  [coorarr[clicked-2][0],coorarr[clicked-2][1]],
+                  [point[0], point[1]],
+                ],
+              })
+              .attr(
+                "d",
+                d3.svg.line()([
+                  [coorarr[clicked-2][0],coorarr[clicked-2][1]],
+                  [point[0], point[1]],
+                ])
+              )
+              .attr(
+                "value",
+                d3.svg.line()([
+                  [coorarr[clicked-2][0],coorarr[clicked-2][1]],
+                  [point[0], point[1]],
+                ])
+              )
+              .attr("stroke", "red");
+            }
+            if(clicked!=arr.length)
+            {
+                
+              d3.select("#foreground")
+              .append("g")
+              .attr("id", "line-" + (clicked))
+              .append("path")
+              .attr("class", `location-line location-line-${clicked}`)
+              .datum({
+                type: "Line",
+                data: [
+                  [point[0], point[1]],
+                  [coorarr[clicked][0],coorarr[clicked][1]]
+                 
+                ],
+              })
+              .attr(
+                "d",
+                d3.svg.line()([
+                  [point[0], point[1]],
+                  [coorarr[clicked][0],coorarr[clicked][1]]
+                
+                ])
+              )
+              .attr(
+                "value",
+                d3.svg.line()([
+                  [point[0], point[1]],
+                  [coorarr[clicked][0],coorarr[clicked][1]]
+                ])
+              )
+              .attr("stroke", "red");
+            
+
+            }   
+               coorarr[clicked]=coord;
                 marked=false;
                 return;
             }
         
+          
+
+
+
+
 
 
 
@@ -457,6 +541,7 @@
           }
   
           pointsArr = point;
+
           return mark;
         }
       }
@@ -536,14 +621,13 @@
                   ])
                 )
                 .attr("stroke", "red");
+               
             }
-            /* linArr[0].map((el) => {
-              d3.select(`.${el.attributes.class.value.split(" ")[1]}`).attr(
-                "d",
-                el.attributes.value.value
-              );
-              return el;
-            }); */
+
+            let x = newpoints[newpoints.length-1].x;
+            let y = newpoints[newpoints.length-1].y;
+            pointsArr = [x,y]
+            
           }
   
           rendererAgent.trigger("render");
@@ -1502,3 +1586,5 @@
   
     when(true).then(init).then(start).otherwise(report.error);
   })();
+
+    
