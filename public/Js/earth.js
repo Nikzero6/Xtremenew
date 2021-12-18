@@ -396,6 +396,9 @@
             .datum({ type: "Point", coordinates: coord })
             .attr("d", path)
             .attr("fill", "green");
+          d3.select(`.text-mark-${clicked + 1}`)
+            .attr("x", point[0] + 7)
+            .attr("y", point[1] + 7);
           /* d3.select("#foreground")
             .append("g")
             .attr("id", `div-mark-${clicked + 1}`)
@@ -531,13 +534,20 @@
           .select("#foreground")
           .append("g")
           .attr("id", `div-mark-${arr.length}`)
+          .attr("name", `div-mark-${arr.length}`)
           .append("path")
           .attr("class", `location-mark location-mark-${arr.length}`)
           .datum({ type: "Point", coordinates: coord })
           .attr("d", path)
           .attr("fill", "green");
 
-        d3.select(`#div-mark-${arr.length}`).append("text").node().value = "1";
+        d3
+          .select(`#div-mark-${arr.length}`)
+          .append("text")
+          .attr("class", `text-mark-${arr.length}`)
+          .attr("x", point[0] + 7)
+          .attr("y", point[1] + 7)
+          .node().innerHTML = arr.length;
 
         if (arr.length > 1) {
           console.log("drawing arks again");

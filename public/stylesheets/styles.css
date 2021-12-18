@@ -291,3 +291,7 @@ body {
   stroke: #aaa832;
   stroke-width: 2.5;
 }
+
+text {
+  color: white;
+}
