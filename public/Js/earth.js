@@ -385,6 +385,7 @@
           ) {
             selected_point = oldpoints[0][i];
             clicked = i;
+            d3.select(`.location-mark-${clicked + 1}`).attr("fill", "red");
             console.log("clicked point", i);
             return;
           }
@@ -393,7 +394,8 @@
         if (selected_point !== null) {
           d3.select(`.location-mark-${clicked + 1}`)
             .datum({ type: "Point", coordinates: coord })
-            .attr("d", path);
+            .attr("d", path)
+            .attr("fill", "green");
           /* d3.select("#foreground")
             .append("g")
             .attr("id", `div-mark-${clicked + 1}`)
@@ -533,7 +535,7 @@
           .attr("class", `location-mark location-mark-${arr.length}`)
           .datum({ type: "Point", coordinates: coord })
           .attr("d", path)
-          .attr("fill", "none");
+          .attr("fill", "green");
 
         d3.select(`#div-mark-${arr.length}`).append("text").node().value = "1";
 
