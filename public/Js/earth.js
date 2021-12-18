@@ -369,9 +369,6 @@
         return; // outside the field boundary, so ignore.
       }
       if (coord && _.isFinite(coord[0]) && _.isFinite(coord[1])) {
-        arr = [...arr, coord];
-        coorarr = [...coorarr, point];
-
         let oldpoints = d3.selectAll(".location-mark");
         console.log(oldpoints[0]);
 
@@ -518,11 +515,15 @@
                   [point[0], point[1]],
                 ])
               );
+            pointsArr = point;
           }
           selected_point = null;
           clicked = -1;
           return;
         }
+
+        arr = [...arr, coord];
+        coorarr = [...coorarr, point];
 
         let mark = d3
           .select("#foreground")
