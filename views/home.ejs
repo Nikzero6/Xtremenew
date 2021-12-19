@@ -4,14 +4,10 @@
     <meta charset="utf-8">
     <title>Globe</title>
 	<link rel="stylesheet" type="text/css" href="./stylesheets/styles.css">
-    
+    <link href="https://pro.fontawesome.com/releases/v6.0.0-beta1/css/all.css" rel="stylesheet">
   </head>
-  
 <body>
     
-        
-        
-
     <div id="display">
 		<svg id="map" class="fill-screen" xmlns="http://www.w3.org/2000/svg" version="1.1"></svg>
         <canvas id="animation" class="fill-screen"></canvas>
@@ -19,80 +15,148 @@
         <svg id="foreground" class="fill-screen" xmlns="http://www.w3.org/2000/svg" version="1.1"></svg>
     </div>
 
-    <div id="details">
-        <p id="status"></p>
-        <div id="location">
-            <p>
-                <span id="location-coord"></span>
-                <span id="location-close" class="invisible text-button"> ✕ </span>
-            </p>
-            <p>
-                <span id="location-wind"></span>
-                <span id="location-wind-units" class="text-button"></span>
-            </p>
-            <p>
-                <span id="location-value"></span>
-                <span id="location-value-units" class="text-button"></span>
-            </p>
-        </div>
+    <button id="myBtn" class="dropbtn">Coordinates</button>
 
-        <p id="earth">
-            <span id="show-menu" class="text-button" title="menu">earth</span>
-            <span id="progress" class="invisible"></span>
-        </p>
-
-        <div id="menu" class="invisible">
-            <p>Date | <span
-                id="data-date" class="local"></span> <span
-                id="toggle-zone" class="text-button"></span>
-            </p>
-            <p>Data | <span id="data-layer"></span></p>
-            <p><span id="scale-label">Scale | </span><canvas id="scale"></canvas></p>
-            <p>Source | <span id="data-center"></span></p>
-            <p>Mode |<span
-                class="text-button" id="ocean-mode-enable">Ocean</span>
-            </p>
-            <p class="wind-mode">Animate |<span
-                class="text-button" id="animate-currents-back" title="Current">Current</span> - <span
-                class="text-button" id="animate-winds-back" title="Wind">Wind</span>-<span
-                class="text-button" id="animate-waves-back" title="Wave">Wave</span>
-
-               </p>
-            
-               <p class="wind-mode">Overlay | <span
-                class="text-button" id="overlay-off">None</span> 
-            </p>
-            <p class="ocean-mode invisible">Animate | <span
-                class="text-button" id="animate-currents" title="Current">Current</span> - <span
-                class="text-button" id="animate-winds" title="Wind">Wind</span> - <span
-                class="text-button" id="animate-waves" title="Wave">Wave</span>
-               
-            </p>
-            <p class="ocean-mode invisible">Overlay | <span
-                class="text-button" id="overlay-ocean-off" title="None">None</span> 
-              
-            </p>
-           
-            <p>Projection |
-                <span
-                class="proj text-button" id="equirectangular" title="Equirectangular">M</span> – 
-               <span
-                class="proj text-button" id="orthographic" title="Orthographic">O</span>
-                
-            </p>
-           
+    <div id="myModal" class="modal">
     
-        </div>
-
-        <div>
-            <table id="coordinates-table">
-                <tr>
-                  <th></th>
-                  <th>Coordinates</th>
-                </tr>
+        <!-- Modal content -->
+       
+        <div class="modal-content" style="overflow-y:auto;">
+          
+            <table id="coordinates-table"  >
+                
+                  <span class="close">&times;</span>
+                 
               </table>
-            </div>
-    </div>
+            
+      </div>
+      </div>
+
+      
+  
+      <div class="container">
+          <div class="abc">
+           
+              <div id="backBtnFunct" class="btnContainer"><button class="backBtn">BACK</button></div>
+          </div> 
+         
+  
+          <nav id="overlay1" ><a>
+            
+            <div class="add" ><i class="fas fa-wind" id="add1"></i> Wind</div>
+        </a><a >
+            
+            <div class="add"><i class="fas fa-globe" id="add1"></i>Current</div>
+        </a><a >
+            
+            <div class="add"><i class="fas fa-water" id="add1"></i> Wave</div>
+        </a></nav>
+  
+      <div id="details">
+        
+          
+          <p id="status"></p>
+          <div id="location">
+              <p>
+                  <span id="location-coord"></span>
+                  <span id="location-close" class="invisible text-button"> ✕ </span>
+              </p>
+              <p>
+                  <span id="location-wind"></span>
+                  <span id="location-wind-units" class="text-button"></span>
+              </p>
+              <p>
+                  <span id="location-value"></span>
+                  <span id="location-value-units" class="text-button"></span>
+              </p>
+          </div>
+  
+          <p id="earth">
+              <span id="show-menu" class="text-button" title="menu">earth</span>
+              <span id="progress" class="invisible"></span>
+          </p>
+  
+          <div id="menu" class="invisible">
+              <p>Date | <span
+                  id="data-date" class="local"></span> <span
+                  id="toggle-zone" class="text-button"></span>
+              </p>
+              <p>Data | <span id="data-layer"></span></p>
+              <p><span id="scale-label">Scale | </span><canvas id="scale"></canvas></p>
+              <p>Source | <span id="data-center"></span></p>
+             
+              <p>Mode |<span
+                  class="text-button" id="ocean-mode-enable">Ocean</span>
+              </p>
+           
+              <p class="wind-mode">Animate |
+                  <span class="text-button" id="animate-wind-back" title="Wind">Wind</span> - 
+                  <span
+                class="text-button" id="animate-currents-back" title="Current">Current</span> -<span
+                class="text-button" id="animate-wave-back" title="Wave">Wave</span>
+              
+                 </p>
+              <p class="wind-mode invisible">Overlay |  <span
+                  class="text-button" id="overlay-off">None</span> – <span
+                  class="text-button" id="overlay-wind" title="Wind Speed">Wind</span>
+               
+              </p>
+             
+              <p class="ocean-mode ">Animate |<span
+                  class="text-button" id="animate-wind" title="Wind">Wind</span> - <span
+                  class="text-button" id="animate-currents" title="Current">Current</span> - 
+                  <span
+                  class="text-button" id="animate-currents" title="Wave">Wave</span>
+                 
+                 
+              </p>
+              <p class="ocean-mode invisible">Overlay | <span
+                  class="text-button" id="overlay-ocean-off" title="None">None</span> – <span
+                  class="text-button" id="overlay-currents" title="Currents">Currents</span>
+              </p>
+           
+              <p>Projection |
+                 <span
+                  class="proj text-button" id="equirectangular" title="Equirectangular">M</span> - <span
+                  class="proj text-button" id="orthographic" title="Orthographic">O</span>
+               
+              </p>
+              
+          </div>
+      </div>
+
+        
+
+
+
+        <script>
+         
+            var modal = document.getElementById("myModal");
+            
+            
+            var btn = document.getElementById("myBtn");
+            
+          
+            var span = document.getElementsByClassName("close")[0];
+            
+          
+            btn.onclick = function() {
+              modal.style.display = "block";
+            }
+            
+         
+            span.onclick = function() {
+              modal.style.display = "none";
+            }
+            
+           
+            window.onclick = function(event) {
+              if (event.target == modal) {
+                modal.style.display = "none";
+              }
+            }
+          
+            </script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js" charset="utf-8"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js" charset="utf-8"></script>

@@ -9,7 +9,7 @@
 (function () {
   "use strict";
 
-  var breakpoints = 0;
+  
 
   var SECOND = 1000;
   var MINUTE = 60 * SECOND;
@@ -35,6 +35,7 @@
 
   var view = µ.view();
   var log = µ.log();
+  var breakpoints = 0;
 
   /**
    * An object to display various types of messages to the user.
@@ -358,6 +359,56 @@
     var marked = false;
     var clicked = -1;
     var selected_point = null;
+
+    d3.select("#backBtnFunct").on("click", function () {
+            
+      if(arr.length !=0){
+         d3.select("#row-"+(arr.length)).remove();
+         d3.select(".location-line-"+(arr.length)).remove();
+         breakpoints--;
+         console.log(breakpoints);
+     }
+     d3.select(`.location-mark-${arr.length}`).remove();            
+     arr.pop();
+ });
+
+ d3.select("#addBtnFunct").on("click", function () {
+     addCoorRow();            
+ });
+
+ function addCoorRow(){
+  var row = d3.select("#coordinates-table").append("tr").attr("id","row-"+(breakpoints+1));
+  row.append("td").text("Point "+(breakpoints+1)).attr("class","cell1");
+  row.append("td").append("input").attr("id","break-point-"+breakpoints).attr("type","text").attr("class","cell2");
+  row.append("td").append("input").attr("id","weather-data-"+breakpoints).attr("type","text").attr("class","cell3");
+ 
+  breakpoints++;
+}
+function getWindAtLocation(coord) {
+
+  var grids=gridAgent.value(), product = grids.primaryGrid;
+  var λ = coord[0], φ = coord[1];
+  var wind = grids.primaryGrid.interpolate(λ, φ);
+  if (µ.isValue(wind)) {
+      var unitToggle = createUnitToggle("#location-wind-units", product), units = unitToggle.value();
+      return (µ.formatVector(wind, units));
+  }            
+}  
+
+function formatLatitudeAndLongtitude(coord){
+  var signLat= coord[1]>=0 ? 'N' :'S';
+  var latitude =  " "+ Math.abs(coord[1].toFixed(2)) + " "+signLat;
+  
+  var signLong= coord[0]>=0 ? 'E' :'W';
+  var longitude = " "+ Math.abs(coord[0].toFixed(2)) + " "+signLong;
+  return {
+      'latitude' : latitude,
+      'longitude' : longitude
+  }
+}
+
+
+
     function drawLocationMark(point, coord) {
       // show the location on the map if defined
       if (
@@ -581,6 +632,16 @@
         }
 
         pointsArr = point;
+
+        var formattedCoordinates = formatLatitudeAndLongtitude(coord);
+        console.log(formattedCoordinates)
+           if(arr.length  >= breakpoints)
+               addCoorRow();
+
+            d3.select("#break-point-"+(arr.length-1)).node().value =  formattedCoordinates['latitude'] + " , " + formattedCoordinates['longitude'];
+            d3.select("#weather-data-"+(arr.length-1)).node().value =  getWindAtLocation(coord);
+          
+          
 
         return mark;
       }
@@ -1202,7 +1263,7 @@
     d3.select("#location-value-units").text("");
     if (clearEverything) {
       activeLocation = {};
-      d3.select(".location-mark").remove();
+      //d3.select(".location-mark").remove();
     }
   }
 
