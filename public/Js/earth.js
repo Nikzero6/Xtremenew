@@ -451,6 +451,16 @@ function formatLatitudeAndLongtitude(coord){
           d3.select(`.text-mark-${clicked + 1}`)
             .attr("x", point[0] + 7)
             .attr("y", point[1] + 7);
+   
+
+            d3.select(`.cancel-mark-${clicked + 1}`)
+            .attr("x", point[0] + 5)
+            .attr("y", point[1] + 5);
+
+
+
+
+        
 
             var formattedCoordinates = formatLatitudeAndLongtitude(coord);
             d3.select("#break-point-"+(clicked )).node().value =  formattedCoordinates['latitude'] + " , " + formattedCoordinates['longitude'];
@@ -612,20 +622,18 @@ function formatLatitudeAndLongtitude(coord){
           .node().innerHTML = arr.length;
 
 
-          /*
+          
           d3
           .select(`#div-mark-${arr.length}`)
-          .append("button")
-          .style("width","100px")
-          .style("height","50px")
-          .attr("id", `button-mark button-mark-${arr.length}`)
           .append("svg")
-          .attr("class", `button`)
-          .append("path")
-          .datum({ type: "Point", coordinates: coord })
-          .attr("d", path)
-          */
-
+          .attr("class", `cancel-mark cancel-mark-${arr.length}`)
+          .attr("x", point[0]+5)
+          .attr("y", point[1]+5)
+          .append("image")
+          .attr("href","https://www.freeiconspng.com/uploads/delete-error-exit-remove-stop-x-cross-icon--28.png")
+          .style("width","20px")
+          .style("height","20px")
+          
 
 
 
