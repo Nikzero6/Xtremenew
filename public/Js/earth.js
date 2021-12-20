@@ -175,6 +175,7 @@
           );
         } else if (op.type !== "spurious") {
           console.log("Actuall zooming");
+
           signalEnd();
         }
         op = null; // the drag/zoom/click operation is over
@@ -450,6 +451,14 @@ function formatLatitudeAndLongtitude(coord){
           d3.select(`.text-mark-${clicked + 1}`)
             .attr("x", point[0] + 7)
             .attr("y", point[1] + 7);
+
+            var formattedCoordinates = formatLatitudeAndLongtitude(coord);
+            d3.select("#break-point-"+(clicked )).node().value =  formattedCoordinates['latitude'] + " , " + formattedCoordinates['longitude'];
+            d3.select("#weather-data-"+(clicked)).node().value =  getWindAtLocation(coord);
+          
+
+
+        
           /* d3.select("#foreground")
             .append("g")
             .attr("id", `div-mark-${clicked + 1}`)
@@ -595,10 +604,31 @@ function formatLatitudeAndLongtitude(coord){
         d3
           .select(`#div-mark-${arr.length}`)
           .append("text")
-          .attr("class", `text-mark-${arr.length}`)
+          .attr("class", `text-mark text-mark-${arr.length}`)
           .attr("x", point[0] + 7)
           .attr("y", point[1] + 7)
+          .style("font-size","15px")
+          .style("color","white")
           .node().innerHTML = arr.length;
+
+
+          /*
+          d3
+          .select(`#div-mark-${arr.length}`)
+          .append("button")
+          .style("width","100px")
+          .style("height","50px")
+          .attr("id", `button-mark button-mark-${arr.length}`)
+          .append("svg")
+          .attr("class", `button`)
+          .append("path")
+          .datum({ type: "Point", coordinates: coord })
+          .attr("d", path)
+          */
+
+
+
+
 
         if (arr.length > 1) {
           console.log("drawing arks again");
@@ -685,6 +715,7 @@ function formatLatitudeAndLongtitude(coord){
           console.log(linArr, "====");
 
           let newpoints = [];
+          let labelpoints=[];
 
           d3.selectAll(".location-mark")[0].map((element) => {
             newpoints.push({
@@ -692,6 +723,15 @@ function formatLatitudeAndLongtitude(coord){
               y: element.getBoundingClientRect().top + 7,
             });
           });
+            
+          console.log( "text",d3.selectAll(".text-mark")[0].map((element)=>{
+            labelpoints.push({
+              x: element.getBoundingClientRect().left + 7,
+              y: element.getBoundingClientRect().top + 7,
+            })
+          }));
+       
+         
 
           for (let i = 1; i < newpoints.length; i++) {
             d3.select("#foreground")
@@ -722,6 +762,10 @@ function formatLatitudeAndLongtitude(coord){
               )
               .attr("stroke", "red");
           }
+
+
+
+
 
           let x = newpoints[newpoints.length - 1].x;
           let y = newpoints[newpoints.length - 1].y;

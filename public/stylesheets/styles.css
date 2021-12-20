@@ -236,6 +236,8 @@ body {
   fill: none;
   -moz-user-select: none;  /* Oddly, Win FF sometimes selects this SVG element. Disable. */
   user-select: none;
+  
+  
 }
 
 
@@ -244,8 +246,11 @@ body {
   stroke-width: 2.5;
 }
 
-text {
+ 
+
+.text-mark{
   color: white;
+
 }
 .dropbtn {
   background-color: #555;
